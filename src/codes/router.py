@@ -99,3 +99,17 @@ def new_session(email: str) -> JSONResponse:
         raise HTTPException(status_code=400, detail=str(e))
 
     return JSONResponse(content={"link": link}, status_code=status.HTTP_200_OK)
+
+
+@codes_router.get("/prime/session_code/{email}", tags=["prime_codes"])
+def get_prime_code(email: str) -> JSONResponse:
+
+    try:
+        code = get_prime_code_by_email(email=email)
+
+        if not code:
+            raise HTTPException(status_code=404, detail="Code not found")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    return JSONResponse(content={"code": code}, status_code=status.HTTP_200_OK)

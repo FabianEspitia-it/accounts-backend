@@ -4,6 +4,8 @@ from src.utils.disney_methods import *
 
 from src.utils.netflix_methods import *
 
+from src.utils.prime_methods import *
+
 
 def get_code_email_by_email(email: str) -> str:
 
@@ -53,3 +55,10 @@ def get_new_session_by_email(email: str) -> str:
     time.sleep(8)
 
     return call_get_netflix_code_email(user_email=email, email_subject=EMAIL_SUBJECT)
+
+
+def get_prime_code_by_email(email: str) -> str:
+
+    time.sleep(9)
+
+    return call_get_prime_session_code(user_email=email)
