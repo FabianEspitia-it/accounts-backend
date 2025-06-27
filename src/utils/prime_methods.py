@@ -117,9 +117,9 @@ def get_code_by_email(user_email: str, imap_email: str, imap_password: str ) -> 
 
 def call_get_prime_session_code(user_email: str) -> str:
     emails: list[str] = [
-        os.getenv("FIFTH_EMAIL"), os.getenv("FOURTH_EMAIL"), os.getenv("EIGHTH_EMAIL"), os.getenv("SEVENTH_EMAIL"), os.getenv("FIRST_EMAIL"), os.getenv("SECOND_EMAIL"), os.getenv("THIRD_EMAIL"), os.getenv("SIXTH_EMAIL")]
+        os.getenv("FOURTH_EMAIL")]
     passwords: list[str] = [
-        os.getenv("FIFTH_PASSWORD"), os.getenv("FOURTH_PASSWORD"), os.getenv("EIGHTH_PASSWORD"), os.getenv("SEVENTH_PASSWORD"), os.getenv("FIRST_PASSWORD"), os.getenv("SECOND_PASSWORD"), os.getenv("THIRD_PASSWORD"), os.getenv("SIXTH_PASSWORD")]
+        os.getenv("FOURTH_PASSWORD")]
     
 
     for email, password in zip(emails, passwords):
