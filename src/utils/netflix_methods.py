@@ -86,7 +86,7 @@ def get_netflix_code_email(user_email: str, email_subject: str, imap_email: str,
                                 continue
         else:
             status, messages = mail.search(
-                None, f'(FROM "info@account.netflix.com" TO "{user_email}" SINCE "01-Nov-2024")')
+                None, f'(FROM "info@account.netflix.com" TO "{user_email}" SINCE "01-Jun-2025")')
 
             if status == "OK":
 
@@ -226,7 +226,7 @@ def get_netflix_session_code(user_email: str, imap_email: str, imap_password: st
 
         else:
             status, messages = mail.search(
-                None, f'(FROM "info@account.netflix.com" TO "{user_email}" SINCE "01-Nov-2024")')
+                None, f'(FROM "info@account.netflix.com" TO "{user_email}" SINCE "01-Jun-2025")')
 
             if status == "OK":
 
