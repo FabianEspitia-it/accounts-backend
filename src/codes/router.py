@@ -108,7 +108,7 @@ def get_prime_code(user_input: SessionCodes) -> JSONResponse:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
     try:
-        code = get_prime_code_by_email(email=email)
+        code = get_prime_code_by_email(email=user_input.email)
 
         if not code:
             raise HTTPException(status_code=404, detail="Code not found")
@@ -125,7 +125,7 @@ def get_hbo_code(user_input: SessionCodes) -> JSONResponse:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
     try:
-        code = get_hbo_code_by_email(email=email)
+        code = get_hbo_code_by_email(email=user_input.email)
 
         if not code:
             raise HTTPException(status_code=404, detail="Code not found")
