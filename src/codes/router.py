@@ -101,11 +101,31 @@ def new_session(email: str) -> JSONResponse:
     return JSONResponse(content={"link": link}, status_code=status.HTTP_200_OK)
 
 
-@codes_router.get("/prime/session_code/{email}", tags=["prime_codes"])
-def get_prime_code(email: str) -> JSONResponse:
+@codes_router.post("/prime/session_code/", tags=["prime_codes"])
+def get_prime_code(user_input: SessionCodes) -> JSONResponse:
+
+    if user_input.password not in (os.getenv("PRIME_PASSWORDS_CODE").replace(" ", "").replace("[", "").replace("]", "")).split(","):
+        raise HTTPException(status_code=401, detail="Unauthorized")
 
     try:
         code = get_prime_code_by_email(email=email)
+
+        if not code:
+            raise HTTPException(status_code=404, detail="Code not found")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    return JSONResponse(content={"code": code}, status_code=status.HTTP_200_OK)
+
+
+@codes_router.post("/hbo/session_code/", tags=["hbo_codes"])
+def get_hbo_code(user_input: SessionCodes) -> JSONResponse:
+
+    if user_input.password not in (os.getenv("HBO_PASSWORDS_CODE").replace(" ", "").replace("[", "").replace("]", "")).split(","):
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    try:
+        code = get_hbo_code_by_email(email=email)
 
         if not code:
             raise HTTPException(status_code=404, detail="Code not found")

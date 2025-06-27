@@ -6,6 +6,8 @@ from src.utils.netflix_methods import *
 
 from src.utils.prime_methods import *
 
+from src.utils.hbo_methods import *
+
 
 def get_code_email_by_email(email: str) -> str:
 
@@ -62,3 +64,10 @@ def get_prime_code_by_email(email: str) -> str:
     time.sleep(9)
 
     return call_get_prime_session_code(user_email=email)
+
+
+def get_hbo_code_by_email(email: str) -> str:
+
+    time.sleep(9)
+
+    return call_get_hbo_code_by_email(user_email=email)
