@@ -15,7 +15,7 @@ def get_netflix_code_email(user_email: str, email_subject: str, imap_email: str,
     mail.select("inbox")
 
     status, messages = mail.search(
-        None, f'(FROM "{user_email}")')
+        None, f'(FROM "{user_email}") SINCE "01-Jun-2025"')
 
     if status == "OK":
 
@@ -177,7 +177,7 @@ def get_netflix_session_code(user_email: str, imap_email: str, imap_password: st
     mail.select("inbox")
 
     status, messages = mail.search(
-        None, f'(FROM "{user_email}")')
+        None, f'(FROM "{user_email}") SINCE "01-Jun-2025"')
 
     if status == "OK":
 
