@@ -23,95 +23,101 @@ def get_hbo_code_by_email(user_email: str, imap_email: str, imap_password: str) 
 
         message_ids: list[str] = messages[0].split()
 
-        if message_ids != []:
+        for msg_id in message_ids[::-1]:
 
+            status, message = mail.fetch(msg_id, "(RFC822)")
 
-            print("Estoy en el if")
+            if status == "OK":
 
-            status, message = mail.fetch(message_ids[::-1], "(RFC822)")
+                for response in message:
 
-            for response in message:
+                    if isinstance(response, tuple):
 
-                if isinstance(response, tuple):
+                        email_message = email.message_from_bytes(response[1])
 
-                    email_message = email.message_from_bytes(response[1])
+                        subject, encoding = decode_header(
+                            email_message["Subject"])[0]
+                        if isinstance(subject, bytes):
+                            subject = subject.decode(
+                                encoding if encoding else "utf-8")
+                            
+                            print(subject)
 
-                    subject, encoding = decode_header(
-                        email_message["Subject"])[0]
-                    if isinstance(subject, bytes):
-                        subject = subject.decode(
-                            encoding if encoding else "utf-8")
-                        
-                        print(subject)
+                            new_subject: str = subject.replace(" ", "")
 
-                        new_subject: str = subject.replace(" ", "")
+                            if ("Urgente: Tu").replace(" ", "") in new_subject:
 
-                        if ("Urgente: Tu").replace(" ", "") in new_subject:
+                                if email_message.is_multipart():
+                                    for part in email_message.walk():
+                                        if part.get_content_type() == "text/html":
+                                            body = part.get_payload(decode=True).decode(
+                                                "utf-8", errors="ignore")
+                                else:
+                                    body = email_message.get_payload(
+                                        decode=True).decode("utf-8", errors="ignore")
+                                    
+                                code = re.findall(
+                                                r'<b>(\d{6})</b>', body)
 
-                            if email_message.is_multipart():
-                                for part in email_message.walk():
-                                    if part.get_content_type() == "text/html":
-                                        body = part.get_payload(decode=True).decode(
-                                            "utf-8", errors="ignore")
-                            else:
-                                body = email_message.get_payload(
-                                    decode=True).decode("utf-8", errors="ignore")
-                                
-                            text = re.sub(r'<[^>]+>', '', body)
-                            code = re.search(r'\b\d{6}\b', text)
+                                print(code)
 
-                            if code:
-                                return code.group(0)
+                                if code:
+                                    return "".join(code)
                             
         else: 
             status, messages = mail.search(
                 None, f'(HEADER From "Max" TO "{user_email}" SINCE "26-Jun-2025")')
+            
             if status == "OK":
+
                 message_ids: list[str] = messages[0].split()
 
-                if message_ids != []:
-                    status, message = mail.fetch(message_ids[::-1], "(RFC822)")
+                for msg_id in message_ids[::-1]:
 
-                    for response in message:
+                    status, message = mail.fetch(msg_id, "(RFC822)")
 
-                        if isinstance(response, tuple):
+                    if status == "OK":
+                
+                            for response in message:
 
-                            email_message = email.message_from_bytes(response[1])
+                                if isinstance(response, tuple):
 
-                            subject, encoding = decode_header(
-                                email_message["Subject"])[0]
-                            if isinstance(subject, bytes):
-                                subject = subject.decode(
-                                    encoding if encoding else "utf-8")
-                                
-                                print("Estoy aquí")
-                                
-                                print(subject)
+                                    email_message = email.message_from_bytes(response[1])
 
-                                new_subject: str = subject.replace(" ", "")
-
-                                if ("Urgente: Tu").replace(" ", "") in new_subject:
-                                    print("Entré al urgente")
-                                    if email_message.is_multipart():
-
-                                        print("Estoy en multipart")
-                                        for part in email_message.walk():
-                                            if part.get_content_type() == "text/html":
-                                                body = part.get_payload(decode=True).decode(
-                                                    "utf-8", errors="ignore")
-                                    else:
-
-                                        print("Estoy en else")
-                                        body = email_message.get_payload(
-                                            decode=True).decode("utf-8", errors="ignore")
+                                    subject, encoding = decode_header(
+                                        email_message["Subject"])[0]
+                                    if isinstance(subject, bytes):
+                                        subject = subject.decode(
+                                            encoding if encoding else "utf-8")
                                         
-                                    code = re.findall(
-                                        r'<b>(\d{6})</b>', body)
+                                        print("Estoy aquí")
+                                        
+                                        print(subject)
 
-                                    print(code)
+                                        new_subject: str = subject.replace(" ", "")
 
-                                    if code:
-                                        return "".join(code)
+                                        if ("Urgente: Tu").replace(" ", "") in new_subject:
+                                            print("Entré al urgente")
+                                            if email_message.is_multipart():
+
+                                                print("Estoy en multipart")
+                                                for part in email_message.walk():
+                                                    if part.get_content_type() == "text/html":
+                                                        body = part.get_payload(decode=True).decode(
+                                                            "utf-8", errors="ignore")
+                                            else:
+
+                                                print("Estoy en else")
+                                                body = email_message.get_payload(
+                                                    decode=True).decode("utf-8", errors="ignore")
+                                                
+                                            code = re.findall(
+                                                r'<b>(\d{6})</b>', body)
+
+                                            print(code)
+
+                                            if code:
+                                                return "".join(code)
                                     
     mail.close()
 
