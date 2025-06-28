@@ -23,45 +23,47 @@ def get_code_by_email(user_email: str, imap_email: str, imap_password: str ) -> 
 
         message_ids: list[str] = messages[0].split()
 
-        for msg_id in message_ids[::-1]:
-            status, message = mail.fetch(msg_id, "(RFC822)")
+        if message_ids != []:
 
-            if status == "OK":
+            for msg_id in message_ids[::-1]:
+                status, message = mail.fetch(msg_id, "(RFC822)")
 
-                for response in message:
+                if status == "OK":
 
-                    if isinstance(response, tuple):
+                    for response in message:
 
-                        email_message = email.message_from_bytes(response[1])
+                        if isinstance(response, tuple):
 
-                        subject, encoding = decode_header(
-                            email_message["Subject"])[0]
-                        if isinstance(subject, bytes):
-                            subject = subject.decode(
-                                encoding if encoding else "utf-8")
-                            
-                            print(subject)
+                            email_message = email.message_from_bytes(response[1])
 
-                            new_subject: str = subject.replace(" ", "")
+                            subject, encoding = decode_header(
+                                email_message["Subject"])[0]
+                            if isinstance(subject, bytes):
+                                subject = subject.decode(
+                                    encoding if encoding else "utf-8")
+                                
+                                print(subject)
 
-                            if ("amazon.com: Intento de inicio de sesión".replace(" ", "") in new_subject) or ("amazon.com: Sign-in attempt".replace(" ", "") in new_subject):
+                                new_subject: str = subject.replace(" ", "")
 
-                                if email_message.is_multipart():
-                                    for part in email_message.walk():
-                                        if part.get_content_type() == "text/html":
-                                            body = part.get_payload(decode=True).decode(
-                                                "utf-8", errors="ignore")
-                                else:
-                                    body = email_message.get_payload(
-                                        decode=True).decode("utf-8", errors="ignore")
-                                    
-                                text = re.sub(r'<[^>]+>', '', body)
+                                if ("amazon.com: Intento de inicio de sesión".replace(" ", "") in new_subject) or ("amazon.com: Sign-in attempt".replace(" ", "") in new_subject):
 
-                                code = re.findall(r'(\d{6})(?:\s|\n|$)', text)
+                                    if email_message.is_multipart():
+                                        for part in email_message.walk():
+                                            if part.get_content_type() == "text/html":
+                                                body = part.get_payload(decode=True).decode(
+                                                    "utf-8", errors="ignore")
+                                    else:
+                                        body = email_message.get_payload(
+                                            decode=True).decode("utf-8", errors="ignore")
+                                        
+                                    text = re.sub(r'<[^>]+>', '', body)
 
-                                if code:
-                                    print(f"Código: {code[-1]}")
-                                    return code[-1]
+                                    code = re.findall(r'(\d{6})(?:\s|\n|$)', text)
+
+                                    if code:
+                                        print(f"Código: {code[-1]}")
+                                        return code[-1]
                             
 
         else:

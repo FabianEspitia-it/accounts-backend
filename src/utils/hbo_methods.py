@@ -23,46 +23,48 @@ def get_hbo_code_by_email(user_email: str, imap_email: str, imap_password: str) 
 
         message_ids: list[str] = messages[0].split()
 
-        for msg_id in message_ids[::-1]:
+        if message_ids != []:
 
-            status, message = mail.fetch(msg_id, "(RFC822)")
+            for msg_id in message_ids[::-1]:
 
-            if status == "OK":
+                status, message = mail.fetch(msg_id, "(RFC822)")
 
-                for response in message:
+                if status == "OK":
 
-                    if isinstance(response, tuple):
+                    for response in message:
 
-                        email_message = email.message_from_bytes(response[1])
+                        if isinstance(response, tuple):
 
-                        subject, encoding = decode_header(
-                            email_message["Subject"])[0]
-                        if isinstance(subject, bytes):
-                            subject = subject.decode(
-                                encoding if encoding else "utf-8")
-                            
-                            print(subject)
+                            email_message = email.message_from_bytes(response[1])
 
-                            new_subject: str = subject.replace(" ", "")
+                            subject, encoding = decode_header(
+                                email_message["Subject"])[0]
+                            if isinstance(subject, bytes):
+                                subject = subject.decode(
+                                    encoding if encoding else "utf-8")
+                                
+                                print(subject)
 
-                            if ("Urgente: Tu").replace(" ", "") in new_subject:
+                                new_subject: str = subject.replace(" ", "")
 
-                                if email_message.is_multipart():
-                                    for part in email_message.walk():
-                                        if part.get_content_type() == "text/html":
-                                            body = part.get_payload(decode=True).decode(
-                                                "utf-8", errors="ignore")
-                                else:
-                                    body = email_message.get_payload(
-                                        decode=True).decode("utf-8", errors="ignore")
-                                    
-                                code = re.findall(
-                                                r'<b>(\d{6})</b>', body)
+                                if ("Urgente: Tu").replace(" ", "") in new_subject:
 
-                                print(code)
+                                    if email_message.is_multipart():
+                                        for part in email_message.walk():
+                                            if part.get_content_type() == "text/html":
+                                                body = part.get_payload(decode=True).decode(
+                                                    "utf-8", errors="ignore")
+                                    else:
+                                        body = email_message.get_payload(
+                                            decode=True).decode("utf-8", errors="ignore")
+                                        
+                                    code = re.findall(
+                                                    r'<b>(\d{6})</b>', body)
 
-                                if code:
-                                    return "".join(code)
+                                    print(code)
+
+                                    if code:
+                                        return "".join(code)
                             
         else: 
             status, messages = mail.search(
