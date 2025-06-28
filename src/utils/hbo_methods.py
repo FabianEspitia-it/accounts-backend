@@ -28,7 +28,7 @@ def get_hbo_code_by_email(user_email: str, imap_email: str, imap_password: str) 
 
             print("Estoy en el if")
 
-            status, message = mail.fetch(message_ids[-1], "(RFC822)")
+            status, message = mail.fetch(message_ids[::-1], "(RFC822)")
 
             for response in message:
 
@@ -70,7 +70,7 @@ def get_hbo_code_by_email(user_email: str, imap_email: str, imap_password: str) 
                 message_ids: list[str] = messages[0].split()
 
                 if message_ids != []:
-                    status, message = mail.fetch(message_ids[-1], "(RFC822)")
+                    status, message = mail.fetch(message_ids[::-1], "(RFC822)")
 
                     for response in message:
 

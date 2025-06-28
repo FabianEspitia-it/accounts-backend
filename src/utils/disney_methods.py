@@ -29,7 +29,7 @@ def get_code_email(user_email: str, imap_email: str, imap_password: str) -> str:
 
             print("Estoy en el if")
 
-            status, message = mail.fetch(message_ids[-1], "(RFC822)")
+            status, message = mail.fetch(message_ids[::-1], "(RFC822)")
 
             for response in message:
 
