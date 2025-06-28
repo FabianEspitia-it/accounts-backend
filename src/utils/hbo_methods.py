@@ -16,7 +16,7 @@ def get_hbo_code_by_email(user_email: str, imap_email: str, imap_password: str) 
     print(user_email)
 
     status, messages = mail.search(
-        None, f'(FROM "{user_email}" SINCE "01-Jun-2025")'
+        None, f'(FROM "{user_email}" SINCE "26-Jun-2025")'
     )
 
     if status == "OK":
@@ -65,7 +65,7 @@ def get_hbo_code_by_email(user_email: str, imap_email: str, imap_password: str) 
                             
         else: 
             status, messages = mail.search(
-                None, f'(HEADER From "Max" TO "{user_email}" SINCE "01-Jun-2025")')
+                None, f'(HEADER From "Max" TO "{user_email}" SINCE "26-Jun-2025")')
             if status == "OK":
                 message_ids: list[str] = messages[0].split()
 

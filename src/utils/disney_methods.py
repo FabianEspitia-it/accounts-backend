@@ -17,7 +17,7 @@ def get_code_email(user_email: str, imap_email: str, imap_password: str) -> str:
     print(user_email)
 
     status, messages = mail.search(
-        None, f'(FROM "{user_email}" SINCE "01-Jun-2025")'
+        None, f'(FROM "{user_email}" SINCE "26-Jun-2025")'
     )
 
     if status == "OK":
@@ -67,7 +67,7 @@ def get_code_email(user_email: str, imap_email: str, imap_password: str) -> str:
 
         else:
             status, messages = mail.search(
-                None, f'(HEADER From "Disney+" TO "{user_email}" SINCE "01-Jun-2025")')
+                None, f'(HEADER From "Disney+" TO "{user_email}" SINCE "26-Jun-2025")')
             
 
             print("Estoy en el else")
