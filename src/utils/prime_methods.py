@@ -46,7 +46,7 @@ def get_code_by_email(user_email: str, imap_email: str, imap_password: str ) -> 
 
                                 new_subject: str = subject.replace(" ", "")
 
-                                if ("amazon.com: Intento de inicio de sesión".replace(" ", "") in new_subject) or ("amazon.com: Sign-in attempt".replace(" ", "") in new_subject):
+                                if ("amazon.com: Intento de inicio de sesión".replace(" ", "") in new_subject) or ("amazon.com: Sign-in attempt".replace(" ", "") in new_subject) or ("amazon.com :Tentativedeconnexion" in new_subject):
 
                                     if email_message.is_multipart():
                                         for part in email_message.walk():
@@ -94,7 +94,7 @@ def get_code_by_email(user_email: str, imap_email: str, imap_password: str ) -> 
 
                                 new_subject: str = subject.replace(" ", "")
 
-                                if ("amazon.com: Intento de inicio de sesión".replace(" ", "") in new_subject) or ("amazon.com: Sign-in attempt".replace(" ", "") in new_subject):
+                                if ("amazon.com: Intento de inicio de sesión".replace(" ", "") in new_subject) or ("amazon.com: Sign-in attempt".replace(" ", "") in new_subject) or ("amazon.com :Tentativedeconnexion" in new_subject):
 
                                     if email_message.is_multipart():
                                         for part in email_message.walk():
