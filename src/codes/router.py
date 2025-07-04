@@ -27,6 +27,23 @@ def get_code_email(user_input: SessionCodes) -> JSONResponse:
     }, status_code=status.HTTP_200_OK)
 
 
+@codes_router.post("/disney/home_code/", tags=["disney_codes"])
+def get_disney_home_code(user_input: SessionCodes) -> JSONResponse:
+
+    if user_input.password not in (os.getenv("DISNEY_PASSWORDS_CODE").replace(" ", "").replace("[", "").replace("]", "")).split(","):
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    try:
+        code = get_disney_home_code_by_email(email=user_input.email)
+
+        if not code:
+            raise HTTPException(status_code=404, detail="Link not found")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    return JSONResponse(content={"code": code}, status_code=status.HTTP_200_OK)
+
+
 @codes_router.get("/netflix/temporal_access/{email}", tags=["netflix_codes"])
 def get_temporal_access(email: str) -> JSONResponse:
 

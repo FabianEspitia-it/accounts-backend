@@ -71,3 +71,10 @@ def get_hbo_code_by_email(email: str) -> str:
     time.sleep(9)
 
     return call_get_hbo_code_by_email(user_email=email)
+
+
+def get_disney_home_code_by_email(email: str) -> str:
+
+    time.sleep(9)
+
+    return call_get_disney_home_code(user_email=email)
